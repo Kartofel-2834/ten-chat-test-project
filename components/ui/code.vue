@@ -1,14 +1,14 @@
 <template>
   <label class="flex justify-between w-full">
     <div
-      v-for="index in length"
-      :key="index"
+      v-for="(value, index) in length"
+      :key="value"
       :class="
         !currentValue[index]
           ? 'text-base-text/30 border-primary/50 '
           : 'text-base-text border-primary'
       "
-      class="w-[64px] h-[64px] text-[32px] rounded-[10px] flex justify-center items-center bg-secondary/10 border-2 duration-200 ease-out transition-all"
+      class="font-inter w-[64px] h-[64px] text-[32px] rounded-[10px] flex justify-center items-center bg-secondary/10 border-2 duration-200 ease-out transition-all"
     >
       {{ currentValue[index] || "-" }}
     </div>
@@ -18,8 +18,6 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from "vue";
-
 const emit = defineEmits(["change", "update:modelValue"]);
 
 const props = defineProps({
@@ -28,22 +26,11 @@ const props = defineProps({
   length: { type: Number, default: 6 },
 });
 
-const commands = {
-  // Ctrl + V
-  async v() {
-    const buffer = await navigator.clipboard.readText();
-
-    if (typeof buffer !== "string") return;
-
-    changeValue(buffer.replace(/[^0-9]/gm, ""));
-  },
-};
-
 const currentValue = computed(() => {
   const result = props.value || props.modelValue;
   const digitsOnly = result.replace(/[^0-9]/gm, "");
 
-  if (digitsOnly === result) {
+  if (digitsOnly !== result) {
     changeValue(digitsOnly);
   }
 
@@ -63,13 +50,17 @@ async function onKeydown(event) {
     return;
   }
 
-  if (/[0-9]/.test(key) && currentValue.value.length <= props.length) {
+  if (/[0-9]/.test(key) && currentValue.value.length < props.length) {
     changeValue(currentValue.value + key);
     return;
   }
 
-  if (ctrlKey && commads.hasOwnProperty(key)) {
-    commands[key](event);
+  if (ctrlKey && key === "v") {
+    const buffer = await navigator.clipboard.readText();
+
+    if (typeof buffer !== "string") return;
+
+    changeValue(buffer.replace(/[^0-9]/gm, ""));
   }
 }
 

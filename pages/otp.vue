@@ -13,10 +13,14 @@
     <template #content>
       <h1 class="text-heading font-bold w-full">Enter OTP</h1>
       <h4 class="text-xl text-subtitle-text w-full font-normal">
-        Sent OTP on <span class="text-primary font-semibold">%email%</span>
+        Sent OTP on
+        <span class="text-primary font-semibold">
+          {{ registrationStore.data.email || "email" }}
+        </span>
       </h4>
 
       <nuxt-link
+        to="/registration"
         class="lined-link self-start cursor text-primary font-bold cursor-pointer mt-[5px]"
       >
         Change email
@@ -24,13 +28,44 @@
 
       <ui-code v-model="otpCode" class="my-[25px]" />
 
-      <ui-button class="w-[95%]"> Submit </ui-button>
+      <ui-button
+        :disabled="otpCode.length < 6"
+        class="w-[95%]"
+        @click="onSubmit"
+      >
+        Submit
+      </ui-button>
     </template>
   </auth-wrapper>
 </template>
 
 <script setup>
-import { ref } from "vue";
+// Utils
+import sleep from "~/utils/sleep";
+
+// Store
+import { useRegistrationStore } from "~/stores/registration";
+
+// API
+import { useLogin } from "~/composables/auth";
+
+const { $alert } = useNuxtApp();
+
+const registrationStore = useRegistrationStore();
+const router = useRouter();
 
 const otpCode = ref("");
+
+async function onSubmit() {
+  const { username, password } = registrationStore.data;
+
+  try {
+    await useLogin(username, password);
+    $alert.info("Account successfully verified");
+    await sleep(2500);
+    router.push("/login");
+  } catch (err) {
+    $alert.error("Error! Account was not verified!");
+  }
+}
 </script>

@@ -28,11 +28,11 @@
         </ui-input>
       </div>
 
-      <ui-button>Log in</ui-button>
+      <ui-button :disabled="!isFormValid" @click="onSubmit">Log in</ui-button>
 
       <p class="flex gap-[7px] text-base mt-[20px]">
         <span>Don't have account?</span>
-        <nuxt-link to="/" class="lined-link text-primary font-bold">
+        <nuxt-link to="/registration" class="lined-link text-primary font-bold">
           Create an account
         </nuxt-link>
       </p>
@@ -41,7 +41,24 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+// API
+import { useLogin } from "~/composables/auth";
+
+const { $alert } = useNuxtApp();
 
 const form = ref({ email: "", password: "" });
+
+const isFormValid = computed(() => !!(form.value.email && form.value.password));
+
+async function onSubmit() {
+  const { email, password } = form.value;
+
+  try {
+    await useLogin(email, password);
+    $alert.info("You logged in!");
+  } catch (err) {
+    $alert.error("Error! Wrong credentials");
+    console.log(err);
+  }
+}
 </script>

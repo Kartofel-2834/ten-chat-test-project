@@ -12,8 +12,6 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-
 const emit = defineEmits(["update:modelValue", "change"]);
 
 const props = defineProps({

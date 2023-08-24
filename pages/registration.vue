@@ -17,11 +17,11 @@
       </h4>
 
       <div class="flex flex-col mt-[25px] gap-[10px] w-full">
-        <ui-input v-model="form.email" placeholder="User">
+        <ui-input v-model="form.username" placeholder="User">
           <icon-user />
         </ui-input>
 
-        <ui-input v-model="form.username" placeholder="Email">
+        <ui-input v-model="form.email" placeholder="Email">
           <icon-email />
         </ui-input>
 
@@ -46,37 +46,85 @@
         class="flex gap-[5px] w-full mt-[10px] mb-[25px] cursor-pointer"
         @click="toggleTerms"
       >
-        <ui-checkbox :value="terms" />
+        <ui-checkbox :value="form.terms" />
         <span> Accept </span>
-        <nuxt-link to="/" class="lined-link text-primary font-bold" @click.stop>
+
+        <span
+          class="lined-link text-primary font-bold cursor-pointer"
+          @click.stop="() => jumpTo('login')"
+        >
           terms and conditions
-        </nuxt-link>
+        </span>
       </div>
 
-      <ui-button>Sign up</ui-button>
+      <nuxt-link
+        :class="{ 'pointer-events-none': !isFormValid }"
+        to="/otp"
+        class="w-full"
+      >
+        <ui-button :disabled="!isFormValid" @click="onSubmit">
+          Sign up
+        </ui-button>
+      </nuxt-link>
 
       <p class="flex gap-[5px] text-base mt-[20px]">
         <span>You have account?</span>
-        <nuxt-link to="/" class="lined-link text-primary font-bold">
+        <span
+          class="lined-link text-primary font-bold cursor-pointer"
+          @click="() => jumpTo('login')"
+        >
           Login now
-        </nuxt-link>
+        </span>
       </p>
     </template>
   </auth-wrapper>
+
+  <ui-confirmation :opened="!!routeJumpLink" @cancel="routeJumpLink = ''">
+    <template #description> all entered data will be lost </template>
+
+    <template #submit>
+      <nuxt-link :to="routeJumpLink">
+        <ui-button> Ok </ui-button>
+      </nuxt-link>
+    </template>
+  </ui-confirmation>
 </template>
 
 <script setup>
-import { ref } from "vue";
+// Store
+import { useRegistrationStore } from "~/stores/registration";
 
-const terms = ref(false);
+const registrationStore = useRegistrationStore();
+
+const routeJumpLink = ref("");
+
 const form = ref({
-  email: "",
-  username: "",
+  email: registrationStore.data.email,
+  username: registrationStore.data.username,
   password: "",
   passwordConfirmation: "",
+  terms: false,
+});
+
+const isFormValid = computed(() => {
+  const data = form.value;
+
+  for (const field in data) {
+    if (!data[field]) return false;
+  }
+
+  return data.password === data.passwordConfirmation;
 });
 
 function toggleTerms() {
-  terms.value = !terms.value;
+  form.value.terms = !form.value.terms;
+}
+
+function jumpTo(link) {
+  routeJumpLink.value = `/${link}`;
+}
+
+function onSubmit() {
+  registrationStore.update(form.value);
 }
 </script>

@@ -10,10 +10,11 @@
     </div>
 
     <input
+      :value="currentValue"
       :type="realType"
       :placeholder="placeholder"
       :class="type === 'password' ? 'pr-[60px]' : 'pr-[20px]'"
-      class="col-start-1 col-end-2 row-start-1 row-end-2 text-input text-base-text py-[20px] pl-[60px] w-full outline-0 border-2 rounded-[10px] bg-secondary/10 border-primary/20 focus:border-primary ease-out transition-colors duration-200"
+      class="font-inter col-start-1 col-end-2 row-start-1 row-end-2 text-input text-base-text py-[20px] pl-[60px] w-full outline-0 border-2 rounded-[10px] bg-secondary/10 border-primary/20 focus:border-primary ease-out transition-colors duration-200"
       @focus="onFocus"
       @blur="onBlur"
       @input="onInput"
@@ -32,8 +33,6 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-
 const emit = defineEmits(["update:modelValue", "change"]);
 
 const props = defineProps({
@@ -47,6 +46,7 @@ const realType = ref(props.type);
 const isFocused = ref(false);
 
 const isPassword = computed(() => realType.value === "password");
+const currentValue = computed(() => props.value || props.modelValue);
 
 function onBlur() {
   isFocused.value = false;

@@ -12,7 +12,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Montserrat", "sans-serif"],
+        montserrat: ["Montserrat", "sans-serif"],
+        inter: ["Inter", "sans-serif"],
       },
 
       fontSize: {
@@ -30,9 +31,23 @@ module.exports = {
       colors: {
         primary: "#6172F3",
         secondary: "#8098F9",
+        common: "#ABAAAA",
+        danger: "#FC5050",
+        "kamal-ambal-z": "red",
         "primary-text": "#E0EAFF",
         "subtitle-text": "#71717A",
         "base-text": "#09090B",
+      },
+
+      keyframes: {
+        popup: {
+          "0%": { transform: "translateY(30px)" },
+          "100%": { transform: "translateY(0px)" },
+        },
+      },
+
+      animation: {
+        popup: "popup 0.35s ease-in-out",
       },
     },
   },

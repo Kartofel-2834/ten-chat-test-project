@@ -3,6 +3,15 @@
   src: url("../fonts/Montserrat.ttf");
 }
 
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/Inter.ttf");
+}
+
+* {
+  font-family: "Montserrat", sans-serif;
+}
+
 .lined-title {
   display: flex;
   align-items: center;
