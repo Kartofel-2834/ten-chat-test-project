@@ -4,8 +4,6 @@ export default defineNuxtConfig({
 
   modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt"],
 
-  plugins: ["~/plugins/alerter.js"],
-
   css: ["~/assets/css/index.css"],
 
   tailwindcss: {

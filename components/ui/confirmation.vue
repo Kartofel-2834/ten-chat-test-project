@@ -9,11 +9,11 @@
     </p>
 
     <div class="grid grid-cols-[1fr_1fr] gap-8 w-full">
-      <slot v-if="!withoutCancel" name="cancel">
+      <slot v-if="!withoutCancel" name="cancel" :cancel="cancel">
         <ui-button theme="danger" @click="cancel">No</ui-button>
       </slot>
 
-      <slot name="submit">
+      <slot name="submit" :submit="submit">
         <ui-button @click="submit">Yes</ui-button>
       </slot>
     </div>

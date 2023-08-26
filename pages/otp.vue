@@ -1,5 +1,5 @@
 <template>
-  <auth-wrapper>
+  <nuxt-layout name="auth">
     <template #intro>
       <img src="/images/otp-intro.png" />
     </template>
@@ -36,7 +36,7 @@
         Submit
       </ui-button>
     </template>
-  </auth-wrapper>
+  </nuxt-layout>
 </template>
 
 <script setup>
@@ -49,8 +49,6 @@ import { useRegistrationStore } from "~/stores/registration";
 // API
 import { useLogin } from "~/composables/auth";
 
-const { $alert } = useNuxtApp();
-
 const registrationStore = useRegistrationStore();
 const router = useRouter();
 
@@ -61,11 +59,8 @@ async function onSubmit() {
 
   try {
     await useLogin(username, password);
-    $alert.info("Account successfully verified");
     await sleep(2500);
     router.push("/login");
-  } catch (err) {
-    $alert.error("Error! Account was not verified!");
-  }
+  } catch (err) {}
 }
 </script>

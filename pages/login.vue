@@ -1,5 +1,5 @@
 <template>
-  <auth-wrapper>
+  <nuxt-layout name="auth">
     <template #intro>
       <img src="/images/login-intro.png" />
     </template>
@@ -37,14 +37,12 @@
         </nuxt-link>
       </p>
     </template>
-  </auth-wrapper>
+  </nuxt-layout>
 </template>
 
 <script setup>
 // API
 import { useLogin } from "~/composables/auth";
-
-const { $alert } = useNuxtApp();
 
 const form = ref({ email: "", password: "" });
 
@@ -55,9 +53,7 @@ async function onSubmit() {
 
   try {
     await useLogin(email, password);
-    $alert.info("You logged in!");
   } catch (err) {
-    $alert.error("Error! Wrong credentials");
     console.log(err);
   }
 }
